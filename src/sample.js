@@ -13,7 +13,6 @@ export const keywords = async (htmlgot = 'unknow') => {
             filter: 0,
             pws: 0,
         },
-        proxy: 'http://82.137.255.109:8080',
         num,
     };
 

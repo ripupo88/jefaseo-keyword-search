@@ -1,4 +1,5 @@
 const util = require('util');
+const axios = require('axios');
 
 const request = require('request-promise-native');
 const cheerio = require('cheerio');
@@ -99,7 +100,7 @@ async function doRequest(options, nbrOfLinks = 0) {
     for (let i = 0; i < options.retry; i += 1) {
         try {
             /* eslint-disable no-await-in-loop */
-            console.log('llamasdfsdfsdf');
+
             // await delay(options.delay);
             response = await execRequest(options, nbrOfLinks);
             break;
@@ -127,35 +128,16 @@ async function doRequest(options, nbrOfLinks = 0) {
  */
 async function execRequest(options, nbrOfLinks) {
     try {
-        const response = await fetch(
-            'https://www.google.com/search?rlz=1C1GCEA_enES926ES927&sxsrf=ALeKk02PcmYAlJDh54y57vTjT3sFgvqtLg%3A1610207440144&ei=0ND5X7OvCMHkU5b2nMAJ&q=aprender+a+bailar&oq=aprender+a+baila&gs_lcp=CgZwc3ktYWIQAxgBMgIIADICCAAyAggAMgIIADICCAAyAggAMgIIADICCAAyAggAMgIIADoHCCMQ6gIQJzoJCCMQ6gIQJxATOgQIABBDOgsIABCxAxDHARCjAjoICAAQsQMQgwE6BQgAELEDOgQIIxAnOgQILhBDOgcIABCxAxBDOg4IABCxAxCDARDHARCvAToFCC4QsQNQ2osiWMegImCPtCJoA3ABeAGAAc8DiAHlGJIBBzAuOS40LTSYAQCgAQGqAQdnd3Mtd2l6sAEGwAEB&sclient=psy-ab',
-            {
-                headers: {
-                    accept:
-                        'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                    'accept-language': 'es-ES,es;q=0.9,en;q=0.8',
-                    'cache-control': 'no-cache',
-                    pragma: 'no-cache',
-                    'sec-ch-ua':
-                        '"Google Chrome";v="87", " Not;A Brand";v="99", "Chromium";v="87"',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-fetch-dest': 'document',
-                    'sec-fetch-mode': 'navigate',
-                    'sec-fetch-site': 'same-origin',
-                    'sec-fetch-user': '?1',
-                    'upgrade-insecure-requests': '1',
-                    'x-client-data':
-                        'CKa1yQEIiLbJAQiltskBCMG2yQEIqZ3KAQjHwsoBCKzHygEI+MfKAQi0y8oBCKPNygEIsM/KAQjc1coBCPCXywEIlJrLAQjQmssBCMGcywEI1ZzLAQipncsB',
-                    'user-agent':
-                        'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1',
-                },
-                referrerPolicy: 'strict-origin-when-cross-origin',
-                body: null,
-                method: 'GET',
-                mode: 'no-cors',
-                credentials: 'include',
-            }
-        );
+        const response = await axios({
+            method: 'get',
+            url: 'https://www.google.com/search?q=aprender+ingles',
+            responseType: 'stream',
+            headers: {
+                'user-agent':
+                    'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1',
+            },
+            mode: 'no-cors',
+        });
         console.log(response);
         if (response && response.statusCode !== HTTP_OK) {
             throw new Error(`Invalid HTTP status code on ${options.url}`);
