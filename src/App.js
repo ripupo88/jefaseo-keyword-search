@@ -19,17 +19,6 @@ const App = (props) => {
     const onSubmit = () => {
         const objectTosend = getObjectToSend(content);
         console.log(objectTosend);
-        // if (content.length > 50) {
-        //     keywords(
-        //         content
-        //             .replace(/<[^>]*>/g, ' ')
-        //             .replace(/\s{2,}/g, ' ')
-        //             .replace(/&nbsp;/g, ' ')
-        //     ).then((res) => {
-        //         console.log(res);
-        //         setSeolist(res);
-        //     }); //Get Content Inside Editor
-        // }
     };
     return (
         <div className=' row'>

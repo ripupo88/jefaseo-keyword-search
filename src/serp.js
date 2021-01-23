@@ -1,5 +1,4 @@
 const util = require('util');
-const axios = require('axios');
 
 const request = require('request-promise-native');
 const cheerio = require('cheerio');
@@ -128,7 +127,7 @@ async function doRequest(options, nbrOfLinks = 0) {
  */
 async function execRequest(options, nbrOfLinks) {
     try {
-        const response = await axios({
+        const response = await fetch({
             method: 'get',
             url: 'https://www.google.com/search?q=aprender+ingles',
             responseType: 'stream',

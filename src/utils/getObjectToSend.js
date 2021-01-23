@@ -16,6 +16,7 @@ function getObjectToSend(content) {
         const alt = $('img').attr('alt');
         const imagetoload = $('img').attr('src').split(',')[1];
         const imgname = $('img').attr('data-file-name');
+        let name = '';
 
         const getUrl = async (imagetoload, imgname) => {
             var formdata = new FormData();
@@ -35,6 +36,7 @@ function getObjectToSend(content) {
 
         getUrl(imagetoload, imgname).then((resp) => {
             console.log(resp);
+            name = resp;
             //obtener la imagen principal y subirla al imgbb
             const miimg = 'https://img.tal';
             $('img').html(`<img class='miclasse' src=${miimg}/>`);
@@ -46,39 +48,39 @@ function getObjectToSend(content) {
                 let texth2 = $(this).text();
                 tableCont.push(texth2);
             });
-            let datatosend = {
-                content: {
-                    tableCont,
-                    h1,
-                    lead,
-                    img: {
-                        name: resp,
-                        alt,
-                    },
-                    html,
-                    recom: [
-                        {
-                            prod: ['g502'],
-                            h2: 'mas baratos',
-                        },
-                    ],
-                },
-                seo: {
-                    opengraph: {
-                        sitename: 'Raton Gaming',
-                    },
-                    twiter: {
-                        author: '@richar',
-                        site: '@site',
-                    },
-                    title: 'mejor seleccion',
-                    description: 'aqui la mejor oferta de ratones',
-                    url: 'mejores-ratones',
-                    img: 'g502logitech.jpg',
-                },
-            };
-            return datatosend;
         });
+        let datatosend = {
+            content: {
+                tableCont,
+                h1,
+                lead,
+                img: {
+                    name,
+                    alt,
+                },
+                html,
+                recom: [
+                    {
+                        prod: ['g502'],
+                        h2: 'mas baratos',
+                    },
+                ],
+            },
+            seo: {
+                opengraph: {
+                    sitename: 'Raton Gaming',
+                },
+                twiter: {
+                    author: '@richar',
+                    site: '@site',
+                },
+                title: h1 + ' | ' + 'Raton Gaming',
+                description: lead,
+                url: h1.replace(/ /, '-'),
+                img: name,
+            },
+        };
+        return datatosend;
     } catch (error) {
         console.log('error', error);
     }
