@@ -1,20 +1,23 @@
 const cheerio = require('cheerio');
 
-function getObjectToSend(content) {
+async function getObjectToSend(content) {
     try {
         let $ = new cheerio.load(content);
         let tableCont = [];
         const h1 = $('h1').text();
         const lead = $('h1 + p').text();
 
-        let html = $.html($('h2').get(0));
-
-        $('h2 ~').each(function (i, elem) {
-            html += $.html(elem);
-        });
-
         const alt = $('img').attr('alt');
         const imagetoload = $('img').attr('src').split(',')[1];
+
+        //cambiando el id de los h2 para poner link
+        $('h2').map(function (i, el) {
+            $(this).attr('id', $(this).text().replace(/ /g, '-'));
+            console.log($(this).attr());
+            let texth2 = $(this).text();
+            tableCont.push(texth2);
+        });
+
         const imgname = $('img').attr('data-file-name');
         let name = '';
 
@@ -34,21 +37,26 @@ function getObjectToSend(content) {
             return res.data.url;
         };
 
-        getUrl(imagetoload, imgname).then((resp) => {
-            console.log(resp);
-            name = resp;
-            //obtener la imagen principal y subirla al imgbb
-            const miimg = 'https://img.tal';
-            $('img').html(`<img class='miclasse' src=${miimg}/>`);
-            console.log($('img').html());
-            //cambiando el id de los h2 para poner link
-            $('h2').map(function (i, el) {
-                $(this).attr('id', $(this).text().replace(/ /g, '-'));
-                console.log($(this).attr());
-                let texth2 = $(this).text();
-                tableCont.push(texth2);
-            });
+        //Obtener imagen principal para el opengraph;
+
+        // quitar base64 de imagenes, subirlas y poner en src el url
+        $('img').map(async function (i, el) {
+            const imagetoload = $(el).attr('src').split(',')[1];
+            const imgname = $(el).attr('data-file-name');
+            let resp = await getUrl(imagetoload, imgname);
+            $(el).html(`<img src=${resp}/>`);
         });
+
+        //obtener el html final
+        let html = $.html($('h2').get(0));
+        $('h2 ~').each(function (i, elem) {
+            html += $.html(elem);
+        });
+
+        //obtener imagen principal
+        let newResp = await getUrl(imagetoload, imgname);
+        name = newResp;
+
         let datatosend = {
             content: {
                 tableCont,
@@ -80,6 +88,7 @@ function getObjectToSend(content) {
                 img: name,
             },
         };
+
         return datatosend;
     } catch (error) {
         console.log('error', error);

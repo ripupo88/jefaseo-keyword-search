@@ -17,8 +17,7 @@ const App = (props) => {
     }, []);
 
     const onSubmit = () => {
-        const objectTosend = getObjectToSend(content);
-        console.log(objectTosend);
+        getObjectToSend(content).then((res) => console.log(res));
     };
     return (
         <div className=' row'>
