@@ -39,19 +39,20 @@ async function getObjectToSend(content) {
 
         //obtener el html final
         let html = $.html($('h2').get(0));
-        $('h2 ~').each(function (i, elem) {
+        $('h2 ~').map(async function (i, elem) {
             if ($(elem)[0].name === 'div') {
                 const imagetoload = $(elem)
                     .find('img')
                     .attr('src')
                     .split(',')[1];
                 const imgname = $(elem).find('img').attr('data-file-name');
-                getUrl(imagetoload, imgname).then((resp) => {
-                    $(this).html(`<img src=${resp}/>`);
-                    console.log($.html(elem));
-                    console.log('img');
-                    html += $.html(elem);
-                });
+                const resp = getUrl(imagetoload, imgname);
+                $(this).html(`<img src=${resp}/>`);
+                console.log($.html(elem));
+                console.log('img');
+                html += $.html(elem);
+
+                console.log('asd');
             } else {
                 console.log('otros');
                 html += $.html(elem);
@@ -89,7 +90,7 @@ async function getObjectToSend(content) {
                 },
                 title: h1 + ' | ' + 'Raton Gaming',
                 description: lead,
-                url: h1.replace(/ /, '-'),
+                url: h1.toLowerCase().replace(/ /g, '-'),
                 img: name,
             },
         };
