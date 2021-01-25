@@ -37,20 +37,25 @@ async function getObjectToSend(content) {
             return res.data.url;
         };
 
-        //Obtener imagen principal para el opengraph;
-
-        // quitar base64 de imagenes, subirlas y poner en src el url
-        $('img').map(async function (i, el) {
-            const imagetoload = $(el).attr('src').split(',')[1];
-            const imgname = $(el).attr('data-file-name');
-            let resp = await getUrl(imagetoload, imgname);
-            $(el).html(`<img src=${resp}/>`);
-        });
-
         //obtener el html final
         let html = $.html($('h2').get(0));
         $('h2 ~').each(function (i, elem) {
-            html += $.html(elem);
+            if ($(elem)[0].name === 'div') {
+                const imagetoload = $(elem)
+                    .find('img')
+                    .attr('src')
+                    .split(',')[1];
+                const imgname = $(elem).find('img').attr('data-file-name');
+                getUrl(imagetoload, imgname).then((resp) => {
+                    $(this).html(`<img src=${resp}/>`);
+                    console.log($.html(elem));
+                    console.log('img');
+                    html += $.html(elem);
+                });
+            } else {
+                console.log('otros');
+                html += $.html(elem);
+            }
         });
 
         //obtener imagen principal
