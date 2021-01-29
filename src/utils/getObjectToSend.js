@@ -39,26 +39,25 @@ async function getObjectToSend(content) {
 
         //obtener el html final
         let html = $.html($('h2').get(0));
-        $('h2 ~').map(async function (i, elem) {
-            if ($(elem)[0].name === 'div') {
-                const imagetoload = $(elem)
-                    .find('img')
-                    .attr('src')
-                    .split(',')[1];
-                const imgname = $(elem).find('img').attr('data-file-name');
-                const resp = getUrl(imagetoload, imgname);
-                $(this).html(`<img src=${resp}/>`);
-                console.log($.html(elem));
-                console.log('img');
-                html += $.html(elem);
 
-                console.log('asd');
-            } else {
-                console.log('otros');
-                html += $.html(elem);
-            }
-        });
-
+        let newhtml = await Promise.all(
+            $('h2 ~').map(async function (i, elem) {
+                if ($(elem)[0].name === 'div') {
+                    const imagetoload = $(elem)
+                        .find('img')
+                        .attr('src')
+                        .split(',')[1];
+                    const imgname = $(elem).find('img').attr('data-file-name');
+                    const resp = await getUrl(imagetoload, imgname);
+                    console.log(elem);
+                    $(elem).html(`<img src=${resp} />`);
+                    return Promise.resolve(elem);
+                }
+                return Promise.resolve(elem);
+            })
+        );
+        html += $.html(newhtml);
+        console.log(html);
         //obtener imagen principal
         let newResp = await getUrl(imagetoload, imgname);
         name = newResp;

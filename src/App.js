@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SunEditor, { buttonList } from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
-import { keywords } from './sample';
 import { getObjectToSend } from './utils/getObjectToSend';
 const cheerio = require('cheerio');
 
@@ -17,7 +16,24 @@ const App = (props) => {
     }, []);
 
     const onSubmit = () => {
-        getObjectToSend(content).then((res) => console.log(res));
+        getObjectToSend(content).then((res) => {
+            const myHeaders = new Headers();
+            myHeaders.append('Content-Type', 'application/json');
+
+            var raw = JSON.stringify({ j: 'l' });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: JSON.stringify(res),
+                redirect: 'follow',
+            };
+
+            fetch('http://161.97.156.161:3030/article', requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.log('error', error));
+        });
     };
     return (
         <div className=' row'>
