@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 
-async function getObjectToSend(content) {
+export async function getObjectToSend(content) {
     try {
         let $ = new cheerio.load(content);
         let tableCont = [];
@@ -112,5 +112,3 @@ async function getObjectToSend(content) {
         console.log('error', error);
     }
 }
-
-module.exports = { getObjectToSend };
