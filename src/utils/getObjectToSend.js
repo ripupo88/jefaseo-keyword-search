@@ -15,9 +15,11 @@ async function getObjectToSend(content) {
                 'id',
                 $(this)
                     .text()
-                    .replace(/ /g, '-')
+                    .normalize('NFD')
                     .replace(/[\u0300-\u036f]/g, '')
                     .replace(/[^\w\s]/gi, '')
+                    .toLowerCase()
+                    .replace(/ /g, '-')
             );
 
             let texth2 = $(this).text();
@@ -96,10 +98,11 @@ async function getObjectToSend(content) {
                 title: h1 + ' | ' + 'Raton Gaming',
                 description: lead,
                 url: h1
+                    .normalize('NFD')
                     .toLowerCase()
-                    .replace(/ /g, '-')
                     .replace(/[\u0300-\u036f]/g, '')
-                    .replace(/[^\w\s]/gi, ''),
+                    .replace(/[^\w\s]/gi, '')
+                    .replace(/ /g, '-'),
                 img: name,
             },
         };
