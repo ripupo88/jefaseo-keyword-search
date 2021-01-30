@@ -6,14 +6,20 @@ async function getObjectToSend(content) {
         let tableCont = [];
         const h1 = $('h1').text();
         const lead = $('h1 + p').text();
-
         const alt = $('img').attr('alt');
         const imagetoload = $('img').attr('src').split(',')[1];
 
         //cambiando el id de los h2 para poner link
         $('h2').map(function (i, el) {
-            $(this).attr('id', $(this).text().replace(/ /g, '-'));
-            console.log($(this).attr());
+            $(this).attr(
+                'id',
+                $(this)
+                    .text()
+                    .replace(/ /g, '-')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^\w\s]/gi, '')
+            );
+
             let texth2 = $(this).text();
             tableCont.push(texth2);
         });
@@ -89,7 +95,11 @@ async function getObjectToSend(content) {
                 },
                 title: h1 + ' | ' + 'Raton Gaming',
                 description: lead,
-                url: h1.toLowerCase().replace(/ /g, '-'),
+                url: h1
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^\w\s]/gi, ''),
                 img: name,
             },
         };
